@@ -3,7 +3,6 @@ package models
 import (
 	"context"
 
-	"github.com/edouardparis/lntop/app"
 	"github.com/edouardparis/lntop/logging"
 	"github.com/edouardparis/lntop/network"
 	"github.com/edouardparis/lntop/network/models"
@@ -20,10 +19,10 @@ type Models struct {
 	Transactions    *Transactions
 }
 
-func New(app *app.App) *Models {
+func New(logger logging.Logger, net network.Network) *Models {
 	return &Models{
-		logger:          app.Logger.With(logging.String("logger", "models")),
-		network:         app.Network,
+		logger:          logger.With(logging.String("logger", "models")),
+		network:         net,
 		Info:            &Info{},
 		Channels:        NewChannels(),
 		WalletBalance:   &WalletBalance{},

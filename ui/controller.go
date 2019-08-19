@@ -5,9 +5,10 @@ import (
 
 	"github.com/jroimartin/gocui"
 
-	"github.com/edouardparis/lntop/app"
+	"github.com/edouardparis/lntop/config"
 	"github.com/edouardparis/lntop/events"
 	"github.com/edouardparis/lntop/logging"
+	"github.com/edouardparis/lntop/network"
 	"github.com/edouardparis/lntop/ui/cursor"
 	"github.com/edouardparis/lntop/ui/models"
 	"github.com/edouardparis/lntop/ui/views"
@@ -300,11 +301,11 @@ func ToggleView(g *gocui.Gui, v1, v2 views.View) error {
 	return err
 }
 
-func newController(app *app.App) *controller {
-	m := models.New(app)
+func newController(cfg config.Config, logger logging.Logger, net network.Network) *controller {
+	m := models.New(logger, net)
 	return &controller{
-		logger: app.Logger.With(logging.String("logger", "controller")),
+		logger: logger.With(logging.String("logger", "controller")),
 		models: m,
-		views:  views.New(app.Config.Views, m),
+		views:  views.New(cfg.Views, m),
 	}
 }

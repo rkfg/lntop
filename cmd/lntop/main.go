@@ -8,10 +8,10 @@ import (
 
 	cli "gopkg.in/urfave/cli.v2"
 
-	"github.com/edouardparis/lntop/app"
 	"github.com/edouardparis/lntop/config"
 	"github.com/edouardparis/lntop/events"
 	"github.com/edouardparis/lntop/logging"
+	"github.com/edouardparis/lntop/network"
 	"github.com/edouardparis/lntop/pubsub"
 	"github.com/edouardparis/lntop/ui"
 	"github.com/edouardparis/lntop/version"
@@ -53,7 +53,12 @@ func run(c *cli.Context) error {
 		return err
 	}
 
-	app, err := app.New(cfg)
+	logger, err := logging.New(cfg.Logger)
+	if err != nil {
+		return err
+	}
+
+	net, err := network.New(&cfg.Network, logger)
 	if err != nil {
 		return err
 	}
@@ -61,12 +66,12 @@ func run(c *cli.Context) error {
 	ctx := context.Background()
 
 	events := make(chan *events.Event)
-	ps := pubsub.New(app.Logger, app.Network)
+	ps := pubsub.New(logger, net)
 
 	go func() {
-		err := ui.Run(ctx, app, events)
+		err := ui.Run(ctx, cfg, logger, net, events)
 		if err != nil {
-			app.Logger.Debug("ui", logging.String("error", err.Error()))
+			logger.Debug("ui", logging.String("error", err.Error()))
 		}
 		ps.Stop()
 	}()
@@ -81,13 +86,18 @@ func pubsubRun(c *cli.Context) error {
 		return err
 	}
 
-	app, err := app.New(cfg)
+	logger, err := logging.New(cfg.Logger)
+	if err != nil {
+		return err
+	}
+
+	net, err := network.New(&cfg.Network, logger)
 	if err != nil {
 		return err
 	}
 
 	events := make(chan *events.Event)
-	ps := pubsub.New(app.Logger, app.Network)
+	ps := pubsub.New(logger, net)
 	ps.Run(context.Background(), events)
 
 	sig := make(chan os.Signal, 1)

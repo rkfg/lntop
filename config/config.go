@@ -44,20 +44,20 @@ type View struct {
 	Columns []string `toml:"columns"`
 }
 
-func Load(path string) (*Config, error) {
-	c := &Config{}
+func Load(path string) (Config, error) {
+	c := Config{}
 
 	if path == "" {
 		dir, err := getAppDir()
 		if err != nil {
-			return nil, err
+			return c, err
 		}
 		path = fmt.Sprintf("%s/config.toml", dir)
 	}
 
-	err := loadFromPath(path, c)
+	err := loadFromPath(path, &c)
 	if err != nil {
-		return nil, err
+		return c, err
 	}
 
 	return c, nil
