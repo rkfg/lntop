@@ -3,6 +3,7 @@ package views
 import (
 	"bytes"
 	"fmt"
+	"strings"
 
 	"github.com/jroimartin/gocui"
 	"golang.org/x/text/language"
@@ -321,7 +322,7 @@ func NewChannels(cfg *config.View, chans *models.Channels) *Channels {
 					if forced {
 						aliasColor = color.Cyan(opts...)
 					}
-					return aliasColor(fmt.Sprintf("%-25s", alias))
+					return aliasColor(fmt.Sprintf("%-25s", strings.ReplaceAll(alias, "\ufe0f", "")))
 				},
 			}
 		case "GAUGE":
@@ -618,6 +619,8 @@ func status(c *netmodels.Channel, opts ...color.Option) string {
 		return color.Yellow(opts...)(fmt.Sprintf("%-13s", "force closing"))
 	case netmodels.ChannelWaitingClose:
 		return color.Yellow(opts...)(fmt.Sprintf("%-13s", "waiting close"))
+	case netmodels.ChannelClosed:
+		return color.Red(opts...)(fmt.Sprintf("%-13s", "closed"))
 	}
 	return ""
 }

@@ -13,6 +13,7 @@ const (
 	ChannelClosing
 	ChannelForceClosing
 	ChannelWaitingClose
+	ChannelClosed
 )
 
 type ChannelsBalance struct {
