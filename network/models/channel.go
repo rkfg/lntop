@@ -13,6 +13,7 @@ const (
 	ChannelClosing
 	ChannelForceClosing
 	ChannelWaitingClose
+	ChannelClosed
 )
 
 type ChannelsBalance struct {
@@ -47,7 +48,6 @@ type Channel struct {
 	PendingHTLC         []*HTLC
 	LastUpdate          *time.Time
 	Node                *Node
-	WeFirst             bool
 	Policy1             *RoutingPolicy
 	Policy2             *RoutingPolicy
 }
