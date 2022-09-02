@@ -89,6 +89,9 @@ func (m Channel) ShortAlias() (alias string, forced bool) {
 type ChannelUpdate struct {
 }
 
+type ChannelEdgeUpdate struct {
+	ChanPoints []string
+}
 type RoutingPolicy struct {
 	TimeLockDelta    uint32
 	MinHtlc          int64
