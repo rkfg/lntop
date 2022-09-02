@@ -653,10 +653,33 @@ func NewChannels(cfg *config.View, chans *models.Channels) *Channels {
 	return channels
 }
 
+func channelDisabled(c *netmodels.Channel) string {
+	outgoing := false
+	incoming := false
+	if c.Policy1 != nil && c.Policy1.Disabled {
+		outgoing = true
+	}
+	if c.Policy2 != nil && c.Policy2.Disabled {
+		incoming = true
+	}
+	result := ""
+	if incoming && outgoing {
+		result = "⇅"
+	} else if incoming {
+		result = "⇊"
+	} else if outgoing {
+		result = "⇈"
+	}
+	if result != "" {
+		return color.Red()(" " + result)
+	}
+	return ""
+}
+
 func status(c *netmodels.Channel, opts ...color.Option) string {
 	switch c.Status {
 	case netmodels.ChannelActive:
-		return color.Green(opts...)(fmt.Sprintf("%-13s", "active"))
+		return color.Green(opts...)(fmt.Sprintf("%-13s", "active"+channelDisabled(c)))
 	case netmodels.ChannelInactive:
 		return color.Red(opts...)(fmt.Sprintf("%-13s", "inactive"))
 	case netmodels.ChannelOpening:
