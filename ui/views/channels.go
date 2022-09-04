@@ -3,7 +3,6 @@ package views
 import (
 	"bytes"
 	"fmt"
-	"strings"
 
 	"github.com/jroimartin/gocui"
 	"golang.org/x/text/language"
@@ -322,7 +321,7 @@ func NewChannels(cfg *config.View, chans *models.Channels) *Channels {
 					if forced {
 						aliasColor = color.Cyan(opts...)
 					}
-					return aliasColor(fmt.Sprintf("%-25s", strings.ReplaceAll(alias, "\ufe0f", "")))
+					return aliasColor(fmt.Sprintf("%-25s", alias))
 				},
 			}
 		case "GAUGE":
