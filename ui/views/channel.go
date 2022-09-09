@@ -211,21 +211,21 @@ func (c *Channel) display() {
 			cyan(" Total Capacity:"), formatAmount(channel.Node.TotalCapacity))
 		fmt.Fprintf(v, "%s %d\n",
 			cyan(" Total Channels:"), channel.Node.NumChannels)
-	}
 
-	if c.channels.CurrentNode != nil && c.channels.CurrentNode.PubKey == channel.RemotePubKey {
-		disabledOut := 0
-		disabledIn := 0
-		for _, ch := range c.channels.CurrentNode.Channels {
-			if ch.Policy1 != nil && ch.Policy1.Disabled {
-				disabledOut++
+		if c.channels.CurrentNode != nil && c.channels.CurrentNode.PubKey == channel.RemotePubKey {
+			disabledOut := 0
+			disabledIn := 0
+			for _, ch := range c.channels.CurrentNode.Channels {
+				if ch.Policy1 != nil && ch.Policy1.Disabled {
+					disabledOut++
+				}
+				if ch.Policy2 != nil && ch.Policy2.Disabled {
+					disabledIn++
+				}
 			}
-			if ch.Policy2 != nil && ch.Policy2.Disabled {
-				disabledIn++
-			}
+			fmt.Fprintf(v, "\n %s %s\n", cyan("Disabled from node:"), formatDisabledCount(disabledOut, channel.Node.NumChannels))
+			fmt.Fprintf(v, " %s %s\n", cyan("Disabled to node:  "), formatDisabledCount(disabledIn, channel.Node.NumChannels))
 		}
-		fmt.Fprintf(v, "\n %s %s\n", cyan("Disabled from node:"), formatDisabledCount(disabledOut, channel.Node.NumChannels))
-		fmt.Fprintf(v, " %s %s\n", cyan("Disabled to node:  "), formatDisabledCount(disabledIn, channel.Node.NumChannels))
 	}
 
 	if channel.Policy1 != nil {
