@@ -62,6 +62,7 @@ func (m *Models) RefreshChannels(ctx context.Context) error {
 		if channel != nil &&
 			(channel.UpdatesCount < channels[i].UpdatesCount ||
 				channel.LastUpdate == nil || channel.Policy1 == nil || channel.Policy2 == nil) {
+			channels[i].Age = m.Info.BlockHeight - uint32(channels[i].ID>>40)
 			err := m.network.GetChannelInfo(ctx, channels[i])
 			if err != nil {
 				return err
