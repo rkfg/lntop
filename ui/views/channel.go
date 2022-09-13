@@ -201,12 +201,12 @@ func (c *Channel) display() {
 			cyan(" Total Channels:"), channel.Node.NumChannels)
 	}
 
-	if channel.Policy1 != nil {
-		printPolicy(v, p, channel.Policy1, true)
+	if channel.LocalPolicy != nil {
+		printPolicy(v, p, channel.LocalPolicy, true)
 	}
 
-	if channel.Policy2 != nil {
-		printPolicy(v, p, channel.Policy2, false)
+	if channel.RemotePolicy != nil {
+		printPolicy(v, p, channel.RemotePolicy, false)
 	}
 
 	if len(channel.PendingHTLC) > 0 {
